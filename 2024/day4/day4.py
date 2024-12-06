@@ -6,60 +6,46 @@ def inbound(i, j, ws):
 def check_diag(i, j, ws):
     c = 0
 
-    if inbound(i-3, j-3, ws) and ws[i-3][j-3] == "S":
-        if ws[i-1][j-1] == "M" and ws[i-2][j-2] == "A":
-            c += 1
-    
-    if inbound(i+3, j+3, ws) and ws[i+3][j+3] == "S":
-        if ws[i+1][j+1] == "M" and ws[i+2][j+2] == "A":
-            c += 1
-    
-    if inbound(i-3, j+3, ws) and ws[i-3][j+3] == "S":
-        if ws[i-1][j+1] == "M" and ws[i-2][j+2] == "A":
-            c += 1
-    
-    if inbound(i+3, j-3, ws) and ws[i+3][j-3] == "S":
-        if ws[i+1][j-1] == "M" and ws[i+2][j-2] == "A":
-            c += 1
-    
+    for x in [-1 , 1]:
+        for y in [-1, 1]:
+            if inbound(i+3*x, j+3*y, ws) and ws[i+3*x][j+3*y] == "S":
+                if ws[i+x][j+y] == "M" and ws[i+2*x][j+2*y] == "A":
+                    c += 1
+
     return c
 
 def part1():
     ws = []
     c = 0
+
     for line in lines:
-        c += line.count("XMAS")
-        c += line.count("SAMX")
         ws.append(list(line))
+    rws = list(zip(*ws[::-1]))
     
     for i in range(len(ws)):
         for j in range(len(ws[i])):
             if ws[i][j] == "X":
                 c += check_diag(i, j, ws)
 
-    ws = list(zip(*ws[::-1]))
-
-
     for i in range(len(ws)):
-        nl = "".join(ws[i])
-        c += nl.count("XMAS")
-        c += nl.count("SAMX")
+        l, nl = "".join(ws[i]), "".join(rws[i])
+        c += nl.count("XMAS") + nl.count("SAMX") + l.count("XMAS") + l.count("SAMX")
 
     print(c)
 
 part1()
 
 def check_diag2(i, j, ws):
-    if inbound(i-1, j-1, ws) and inbound(i+1, j+1, ws) and inbound(i-1, j+1, ws) and inbound(i+1, j-1, ws):
-        if ws[i-1][j+1] == ws[i+1][j+1] and ws[i-1][j-1] == ws[i+1][j-1] and ws[i-1][j+1] != ws[i-1][j-1]:
-            if (ws[i-1][j-1] == "M" and ws[i+1][j+1] == "S") or (ws[i-1][j-1] == "S" and ws[i+1][j+1] == "M"): return 1
-            
-        if ws[i-1][j+1] == ws[i-1][j-1] and ws[i+1][j-1] == ws[i+1][j+1] and ws[i+1][j+1] != ws[i-1][j-1]:
-            if (ws[i-1][j-1] == "M" and ws[i+1][j+1] == "S") or (ws[i-1][j-1] == "S" and ws[i+1][j+1] == "M"): return 1
+    l = {"X" : 0, "M" : 0, "A": 0, "S": 0}
+
+    for x in [-1, 1]:
+        for y in [-1, 1]:
+            if inbound(i+x, j+y, ws):
+                l[ws[i+x][j+y]] += 1
+
+    if l["M"] == l["S"] == 2 and ws[i-1][j-1] != ws[i+1][j+1]: return 1
     return 0
     
-
-
 def part2():
     ws = []
     c = 0
