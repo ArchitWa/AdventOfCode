@@ -6,13 +6,10 @@ def part1():
     for line in lines:
         le.append(int(line.split("   ")[0]))
         ri.append(int(line.split("   ")[1]))
-    le = sorted(le)
-    ri = sorted(ri)
+    le, ri = list(map(int, sorted(le))), list(map(int, sorted(ri)))
 
-    d = 0
-    for i in range(len(le)):
-        d += abs(int(le[i]) - int(ri[i]))
-    print(d)
+    d = [abs(le[i] - ri[i]) for i in range(len(le))]
+    print(sum(d))
 
 part1()
 
@@ -22,9 +19,7 @@ def part2():
         le.append(int(l.split("   ")[0]))
         ri.append(int(l.split("   ")[1]))
     
-    s = 0
-    for i in range(len(le)):
-        s += le[i] * ri.count(le[i])
-    print(s)
+    s = [le[i] * ri.count(le[i]) for i in range(len(le))]
+    print(sum(s))
 
 part2()
