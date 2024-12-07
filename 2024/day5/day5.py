@@ -1,62 +1,34 @@
 from functools import cmp_to_key
-lines = open('/Users/architwankhade/Downloads/AdventOfCode/2024/day5/input.txt').read().splitlines()
+lines = open('/Users/architwankhade/Downloads/AdventOfCode/2024/day5/input.txt').read()
 
-notpassed = []
+r = {}
+lines = lines.split("\n\n")
+RULES = [list(map(int, line.split(","))) for line in lines[1].splitlines()]
+
+def compare(a, b):
+    if a in r[str(b)]:
+        return -1
+    if b in r[str(a)]:
+        return 1
+    return 0
+
+for line in lines[0].splitlines():
+    a, b = line.split("|")
+    if b in r:
+        r[b].append(int(a))
+    else:
+        r[b] = [int(a)]
 
 def part1():
-    r = {}
-    s = 0
-    for line in lines:
-        if "|" in line:
-            a, b = line.split("|")
-            if a in r: r[a].append(int(b))
-            else: r[a] = [int(b)]
-            continue
-        
-        if line == "": continue
+    passed = [rule for rule in RULES if rule == sorted(rule, key=cmp_to_key(compare))]
+    print(sum([rule[int(len(rule)/2)] for rule in passed]))
 
-        rules = list(map(int, line.split(",")))
-        F = True
-
-        for i in range(len(rules)-1):
-            remaining = rules[i+1:]
-            for j in range(len(remaining)):
-                if str(rules[i]) not in r.keys() or remaining[j] not in r[str(rules[i])] : 
-                    F = False
-                    break
-
-        if F: s += rules[int(len(rules)/2)]
-        else: notpassed.append(rules) 
+    return [rule for rule in RULES if rule not in passed]
     
-    print(s)
 
-part1()
+def part2(notpassed):
+    print(sum([np[int(len(np)//2)] for np in [sorted(np, key=cmp_to_key(compare)) for np in notpassed]]))
 
-def part2():
-    r = {}
-    s = 0
-    for line in lines:
-        if "|" in line:
-            a, b = line.split("|")
-            if b in r:
-                r[b].append(int(a))
-            else:
-                r[b] = [int(a)]
-            continue
-        
-    def compare(a, b):
-        if a in r[str(b)]:
-            return -1
-        if b in r[str(a)]:
-            return 1
-        return 0
-
-    for np in notpassed:
-        np = sorted(np, key=cmp_to_key(compare))
-        s += np[int(len(np)//2)]
-    
-    print(s)
-
-part2()
+part2(part1())
     
 # 4944
