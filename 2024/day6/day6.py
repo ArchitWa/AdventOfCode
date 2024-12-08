@@ -1,5 +1,3 @@
-
-
 lines = open('/Users/architwankhade/Downloads/AdventOfCode/2024/day6/input.txt').read().splitlines()
 
 dirs = {0: (-1, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1)}
