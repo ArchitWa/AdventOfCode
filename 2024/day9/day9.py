@@ -1,0 +1,1 @@
+lines = open('/Users/architwankhade/Downloads/AdventOfCode/2024/day9/input.txt').read().splitlines()
